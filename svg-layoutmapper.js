@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BoxType = exports.DriveType = void 0;
 // import * as svg from "svg.js";
-var SVG = require("svg.js");
+import SVG from "svg.min.js";
 var DriveType;
 (function (DriveType) {
     DriveType["HDD35"] = "3.5' HDD";
