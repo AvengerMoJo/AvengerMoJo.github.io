@@ -1,5 +1,5 @@
 // import * as svg from "svg.js";
-var SVG = require("svg.min.js");
+var SVG = require("svg.js");
 
 declare global {
     interface Window {
@@ -8,7 +8,6 @@ declare global {
         drawDriveLayout:any;
     }
 }
-
 
 export enum DriveType {
     HDD35 = "3.5' HDD",

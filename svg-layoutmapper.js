@@ -1,9 +1,8 @@
 "use strict";
-var exports;
-exports.__esModule = true;
+//exports.__esModule = true;
 exports.BoxType = exports.DriveType = void 0;
 // import * as svg from "svg.js";
-var SVG = require("svg.min.js");
+var SVG = require("svg.js");
 var DriveType;
 (function (DriveType) {
     DriveType["HDD35"] = "3.5' HDD";
