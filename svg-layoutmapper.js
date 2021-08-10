@@ -1,5 +1,5 @@
 "use strict";
-//exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.BoxType = exports.DriveType = void 0;
 // import * as svg from "svg.js";
 var SVG = require("svg.js");
@@ -110,8 +110,8 @@ function drawDriveLayout(svg, server_type, server_unit, drive_row, drive_col, dr
     server.move(pic_move_x, pic_move_y);
 }
 //let draw = SVG('box').size(1400, 1400);
-function clear(draw) {
-    draw.clear();
+function clear(theBox) {
+    theBox.clear();
 }
 var draw = SVG('box').size(1400, 1400);
 window.clear = clear;

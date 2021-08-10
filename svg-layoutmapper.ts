@@ -127,8 +127,8 @@ function drawDriveLayout(
 
 //let draw = SVG('box').size(1400, 1400);
 
-function clear(draw){
-    draw.clear()
+function clear(theBox:any){
+    theBox.clear()
 }
 
 let draw = SVG('box').size(1400, 1400);
