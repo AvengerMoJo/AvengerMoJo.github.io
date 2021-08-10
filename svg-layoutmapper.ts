@@ -1,11 +1,23 @@
-enum DriveType {
-  HDD35 = "3.5' HDD",
+// import * as svg from "svg.js";
+var SVG = require("svg.js");
+
+declare global {
+    interface Window {
+        clear:any;
+        draw:any;
+        drawDriveLayout:any;
+    }
+}
+
+
+export enum DriveType {
+    HDD35 = "3.5' HDD",
     HDD25 = "2.5' HDD",
     SSD25 = "2.5' HDD",
     NVME = "NVMe",
 }
 
-enum BoxType {
+export enum BoxType {
   Rackmount = "Rackmount",
     Tower = "Tower",
     Others = "Other",
@@ -20,7 +32,7 @@ enum SlotOrientation {
 // 3.5Drive = 105 * 25, 2.5Drive = 70 * 15
 
 function drawDriveLayout(
-  svg: SVG, server_type: BoxType, server_unit: number, drive_row: number, drive_col: number,
+  svg: typeof SVG, server_type: BoxType, server_unit: number, drive_row: number, drive_col: number,
   drive_slot: number, slot_type: DriveType, orientation: SlotOrientation,
   pic_move_x: number, pic_move_y: number) {
 
@@ -29,15 +41,16 @@ function drawDriveLayout(
 
     const box_width = (server_type == BoxType.Rackmount) ? 550 : server_unit * 45;
     const box_height = (server_type == BoxType.Rackmount) ? server_unit * 45 : 350;
-		const box_style = { fill: 'none', stroke: '#000', 'stroke-width': 5 };
+    const box_style = { fill: 'none', stroke: '#000', 'stroke-width': 5 };
+
+    const drive_size_x = 0;
+    const drive_size_y = 0;
 
     if (slot_type != DriveType.NVME) {
         const drive_size_x = (slot_type == DriveType.HDD35) ? 105: 70;
         const drive_size_y = (slot_type == DriveType.HDD35) ? 24: 15;
-    } else {
-        const drive_size_x = 0;
-        const drive_size_y = 0;
     }
+
     const drive_width = (orientation == SlotOrientation.Vertical) ? drive_size_y : drive_size_x;
     const drive_height = (orientation == SlotOrientation.Vertical) ? drive_size_x : drive_size_y;
     const drive_style = { fill: 'none', stroke: '#000', 'stroke-width': 2 };
@@ -47,6 +60,7 @@ function drawDriveLayout(
     const drive_group_move_x = (server_type == BoxType.Rackmount) ? 80: 20;
     const drive_group_move_y = (server_type == BoxType.Rackmount) ? 10: 80;
 
+    var drive_text_x, drive_text_y;
     if( slot_type == DriveType.HDD35 ) {
     	if(orientation == SlotOrientation.Vertical) {
     		const drive_text_x = 35;
@@ -78,13 +92,13 @@ function drawDriveLayout(
       color: '#000'
     }).move(10, 15)
     let server = svg.group()
-    for (z = 0; z < z_dimension; z++) {
+    for (var z = 0; z < z_dimension; z++) {
         let z_group = svg.group()
         let box = svg.rect(box_width, box_height).attr(box_style).radius(5);
         let harddrive_group = svg.group();
-	    for (r = 0; r < drive_row; r++) {
+	    for (var r = 0; r < drive_row; r++) {
             let new_row_group = svg.group();
-    		for (c = 0; c < drive_col; c++) {
+    		for (var c = 0; c < drive_col; c++) {
                 let drive = svg.rect(drive_width, drive_height).attr(drive_style).radius(5).move(0,0)
                 let text = svg.text(slot_type).font(text_style).rotate(text_rot).move(drive_text_x, drive_text_y).build(true)
                 let drive_group = svg.group()
@@ -119,7 +133,7 @@ function clear(draw){
 }
 
 let draw = SVG('box').size(1400, 1400);
-window.clear = clear; 
+window.clear = clear;
 window.drawDriveLayout = drawDriveLayout;
 window.draw = draw;
 
