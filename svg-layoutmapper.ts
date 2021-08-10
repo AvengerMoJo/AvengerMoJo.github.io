@@ -1,5 +1,5 @@
 // import * as svg from "svg.js";
-var SVG = require("svg.js");
+var SVG = require("svg.min.js");
 
 declare global {
     interface Window {
