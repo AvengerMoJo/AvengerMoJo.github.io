@@ -1,5 +1,5 @@
 // import { SVG } from "@svgdotjs/svg.js";
-import * as SVG from 'svg.min.js';
+import * from 'svg.min.js';
 export var DriveType;
 (function (DriveType) {
     DriveType["HDD35"] = "3.5' HDD";
