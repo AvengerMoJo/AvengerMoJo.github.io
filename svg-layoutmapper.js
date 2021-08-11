@@ -1,21 +1,18 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.BoxType = exports.DriveType = void 0;
-// import * as svg from "svg.js";
-import SVG from "svg.min.js";
-var DriveType;
+// import { SVG } from "@svgdotjs/svg.js";
+import { SVG } from '@svgdotjs/svg.js';
+export var DriveType;
 (function (DriveType) {
     DriveType["HDD35"] = "3.5' HDD";
     DriveType["HDD25"] = "2.5' HDD";
     DriveType["SSD25"] = "2.5' HDD";
     DriveType["NVME"] = "NVMe";
-})(DriveType = exports.DriveType || (exports.DriveType = {}));
-var BoxType;
+})(DriveType || (DriveType = {}));
+export var BoxType;
 (function (BoxType) {
     BoxType["Rackmount"] = "Rackmount";
     BoxType["Tower"] = "Tower";
     BoxType["Others"] = "Other";
-})(BoxType = exports.BoxType || (exports.BoxType = {}));
+})(BoxType || (BoxType = {}));
 var SlotOrientation;
 (function (SlotOrientation) {
     SlotOrientation["Vertical"] = "Vertical";
@@ -24,69 +21,70 @@ var SlotOrientation;
 // 1U = 45 * 550
 // 3.5Drive = 105 * 25, 2.5Drive = 70 * 15
 function drawDriveLayout(svg, server_type, server_unit, drive_row, drive_col, drive_slot, slot_type, orientation, pic_move_x, pic_move_y) {
-    var z_dimension = drive_slot / (drive_row * drive_col);
-    var z_slot = drive_slot / z_dimension;
-    var box_width = (server_type == BoxType.Rackmount) ? 550 : server_unit * 45;
-    var box_height = (server_type == BoxType.Rackmount) ? server_unit * 45 : 350;
-    var box_style = { fill: 'none', stroke: '#000', 'stroke-width': 5 };
-    var drive_size_x = 0;
-    var drive_size_y = 0;
+    const z_dimension = drive_slot / (drive_row * drive_col);
+    const z_slot = drive_slot / z_dimension;
+    const box_width = (server_type == BoxType.Rackmount) ? 550 : server_unit * 45;
+    const box_height = (server_type == BoxType.Rackmount) ? server_unit * 45 : 350;
+    const box_style = { fill: 'none', stroke: '#000', 'stroke-width': 5 };
+    const drive_size_x = 0;
+    const drive_size_y = 0;
     if (slot_type != DriveType.NVME) {
-        var drive_size_x_1 = (slot_type == DriveType.HDD35) ? 105 : 70;
-        var drive_size_y_1 = (slot_type == DriveType.HDD35) ? 24 : 15;
+        const drive_size_x = (slot_type == DriveType.HDD35) ? 105 : 70;
+        const drive_size_y = (slot_type == DriveType.HDD35) ? 24 : 15;
     }
-    var drive_width = (orientation == SlotOrientation.Vertical) ? drive_size_y : drive_size_x;
-    var drive_height = (orientation == SlotOrientation.Vertical) ? drive_size_x : drive_size_y;
-    var drive_style = { fill: 'none', stroke: '#000', 'stroke-width': 2 };
-    var drive_move_x = drive_width + 3;
-    var drive_move_y = drive_height + 3;
-    var drive_group_move_x = (server_type == BoxType.Rackmount) ? 80 : 20;
-    var drive_group_move_y = (server_type == BoxType.Rackmount) ? 10 : 80;
-    var drive_text_x, drive_text_y;
+    const drive_width = (orientation == SlotOrientation.Vertical) ? drive_size_y : drive_size_x;
+    const drive_height = (orientation == SlotOrientation.Vertical) ? drive_size_x : drive_size_y;
+    const drive_style = { fill: 'none', stroke: '#000', 'stroke-width': 2 };
+    const drive_move_x = drive_width + 3;
+    const drive_move_y = drive_height + 3;
+    const drive_group_move_x = (server_type == BoxType.Rackmount) ? 80 : 20;
+    const drive_group_move_y = (server_type == BoxType.Rackmount) ? 10 : 80;
+    var drive_text_x = 0;
+    var drive_text_y = 0;
     if (slot_type == DriveType.HDD35) {
         if (orientation == SlotOrientation.Vertical) {
-            var drive_text_x_1 = 35;
-            var drive_text_y_1 = 6;
+            const drive_text_x = 35;
+            const drive_text_y = 6;
         }
         else {
-            var drive_text_x_2 = 5;
-            var drive_text_y_2 = 0;
+            const drive_text_x = 5;
+            const drive_text_y = 0;
         }
     }
     else {
         if (orientation == SlotOrientation.Vertical) {
-            var drive_text_x_3 = 35;
-            var drive_text_y_3 = 6;
+            const drive_text_x = 35;
+            const drive_text_y = 6;
         }
         else {
-            var drive_text_x_4 = 5;
-            var drive_text_y_4 = 0;
+            const drive_text_x = 5;
+            const drive_text_y = 0;
         }
     }
-    var text_style = { family: 'Helvetica', size: 12, anchor: 'start', leading: '0em' };
-    var text_rot = (orientation == SlotOrientation.Vertical) ? 90 : 0;
-    var box_label = svg.line(0, 0, 40, 0);
-    var power_buttom = svg.circle().fill('none').radius(5).move(15, 10);
-    var decoration = svg.group();
+    const text_style = { family: 'Helvetica', size: 12, anchor: 'start', leading: '0em' };
+    const text_rot = (orientation == SlotOrientation.Vertical) ? 90 : 0;
+    let box_label = svg().line(0, 0, 40, 0);
+    let power_buttom = svg().circle().fill('none').radius(5).move(15, 10);
+    let decoration = svg().group();
     decoration.add(box_label);
     decoration.add(power_buttom);
     decoration.stroke({
         width: 3,
         color: '#000'
     }).move(10, 15);
-    var server = svg.group();
+    let server = svg().group();
     for (var z = 0; z < z_dimension; z++) {
-        var z_group = svg.group();
-        var box = svg.rect(box_width, box_height).attr(box_style).radius(5);
-        var harddrive_group = svg.group();
+        let z_group = svg().group();
+        let box = svg().rect(box_width, box_height).attr(box_style).radius(5);
+        let harddrive_group = svg().group();
         for (var r = 0; r < drive_row; r++) {
-            var new_row_group = svg.group();
+            let new_row_group = svg().group();
             for (var c = 0; c < drive_col; c++) {
-                var drive = svg.rect(drive_width, drive_height).attr(drive_style).radius(5).move(0, 0);
-                var text = svg.text(slot_type).font(text_style).rotate(text_rot).move(drive_text_x, drive_text_y).build(true);
-                var drive_group = svg.group();
+                let drive = svg().rect(drive_width, drive_height).attr(drive_style).radius(5).move(0, 0);
+                let text = svg().text(slot_type).font(text_style).rotate(text_rot).move(drive_text_x, drive_text_y).build(true);
+                let drive_group = svg().group();
                 drive_group.add(drive);
-                drive_group.add(text.plain(z * z_slot + r * ((drive_slot / z_dimension) / drive_row) + c + 1));
+                drive_group.add(text.plain(String(z * z_slot + r * ((drive_slot / z_dimension) / drive_row) + c + 1)));
                 drive_group.move(c * drive_move_x, 0);
                 new_row_group.add(drive_group);
                 new_row_group.move(0, r * drive_move_y);
@@ -113,7 +111,7 @@ function drawDriveLayout(svg, server_type, server_unit, drive_row, drive_col, dr
 function clear(theBox) {
     theBox.clear();
 }
-var draw = SVG('box').size(1400, 1400);
+let draw = SVG('box').size(1400, 1400);
 window.clear = clear;
 window.drawDriveLayout = drawDriveLayout;
 window.draw = draw;

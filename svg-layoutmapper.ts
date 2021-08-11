@@ -1,5 +1,6 @@
-// import * as svg from "svg.js";
-var SVG = require("svg.js");
+// import { SVG } from "@svgdotjs/svg.js";
+import { SVG, extend as SVGextend, Element as SVGElement  } from '@svgdotjs/svg.js'
+
 
 declare global {
     interface Window {
@@ -59,7 +60,8 @@ function drawDriveLayout(
     const drive_group_move_x = (server_type == BoxType.Rackmount) ? 80: 20;
     const drive_group_move_y = (server_type == BoxType.Rackmount) ? 10: 80;
 
-    var drive_text_x, drive_text_y;
+    var drive_text_x:number=0;
+    var drive_text_y:number=0;
     if( slot_type == DriveType.HDD35 ) {
     	if(orientation == SlotOrientation.Vertical) {
     		const drive_text_x = 35;
@@ -81,28 +83,28 @@ function drawDriveLayout(
     const text_style = { family: 'Helvetica', size: 12, anchor: 'start', leading: '0em'};
     const text_rot   = (orientation == SlotOrientation.Vertical) ? 90 : 0;
 
-    let box_label = svg.line(0, 0, 40, 0);
-    let power_buttom = svg.circle().fill('none').radius(5).move(15, 10);
-    let decoration = svg.group()
+    let box_label = svg().line(0, 0, 40, 0);
+    let power_buttom = svg().circle().fill('none').radius(5).move(15, 10);
+    let decoration = svg().group()
     decoration.add(box_label)
     decoration.add(power_buttom)
     decoration.stroke({
       width: 3,
       color: '#000'
     }).move(10, 15)
-    let server = svg.group()
+    let server = svg().group()
     for (var z = 0; z < z_dimension; z++) {
-        let z_group = svg.group()
-        let box = svg.rect(box_width, box_height).attr(box_style).radius(5);
-        let harddrive_group = svg.group();
+        let z_group = svg().group()
+        let box = svg().rect(box_width, box_height).attr(box_style).radius(5);
+        let harddrive_group = svg().group();
 	    for (var r = 0; r < drive_row; r++) {
-            let new_row_group = svg.group();
+            let new_row_group = svg().group();
     		for (var c = 0; c < drive_col; c++) {
-                let drive = svg.rect(drive_width, drive_height).attr(drive_style).radius(5).move(0,0)
-                let text = svg.text(slot_type).font(text_style).rotate(text_rot).move(drive_text_x, drive_text_y).build(true)
-                let drive_group = svg.group()
+                let drive = svg().rect(drive_width, drive_height).attr(drive_style).radius(5).move(0,0)
+                let text = svg().text(slot_type).font(text_style).rotate(text_rot).move(drive_text_x, drive_text_y).build(true)
+                let drive_group = svg().group()
                 drive_group.add(drive)
-                drive_group.add(text.plain(z*z_slot+r*((drive_slot/z_dimension)/drive_row)+c+1))
+                drive_group.add(text.plain(String(z*z_slot+r*((drive_slot/z_dimension)/drive_row)+c+1)))
                 drive_group.move(c * drive_move_x, 0)
                 new_row_group.add(drive_group)
                 new_row_group.move(0,r*drive_move_y)
