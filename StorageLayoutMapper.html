@@ -1,21 +1,20 @@
 <html>
     <head>
         <title>Storage Layout Mapper Page</title>
-        <link rel="stylesheet" href="SLM-styles.css">
+        <link rel="stylesheet" href="/src/SLM-styles.css">
         <style>
             body {
                 background-color:black;
                 color: white;
             }
         </style>
-        <base href="https://AvengerMoJo.github.io/" target="_blank">
+        <!-- <base href="https://AvengerMoJo.github.io/" target="_blank"> -->
         <meta charset="UTF-8">
         <meta name="description" content="Storage Layout Mapping tool.">
         <meta name="keywords" content="AvengerMoJo, Storage, Layout, Mapping">
         <meta name="author" content="AvengerMoJo">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- <script type="module" src="svg.min.js"></script> -->
-        <script type="module" src="svg-layoutmapper.js"></script>
+        <script type="module" src="/src/svg-layoutmapper.ts"></script>
     </head>
     <body>
     <h1>Storage Drive Layout Configurator</h1>
@@ -90,31 +89,31 @@
                 <option value='Others'>Others</option>
             </select>
         </div>
-    </div>
-    <div id="Draw" class="Draw">
-        <button onclick="window.call()">Draw</button>
-        <script>
-          function call() {
-            clear(draw);
-            boxtype = document.getElementById("BoxType").value;
-            server_u = document.getElementById("ServerHeight").value;
-            drive_row = document.getElementById("DriveRow").value;
-            drive_col = document.getElementById("DriveCol").value;
-            drive_slot = document.getElementById("TotalDrive").value;
-            drive_type = document.getElementById("DriveType").value;
-            direction = document.getElementById("DriveOrientation").value;
-            drawDriveLayout(draw, boxtype, server_u, drive_row, drive_col, drive_slot, drive_type, direction, 50, 50);
-	        }
-        </script>
-        <div id="Download" class="Download">
-            <input width=100% type="text" min="1" max="60" value="sample.svg" class="Filename" id="Filename">
-            <button onclick="window.download()">Download</button>
+        <div id="Draw" class="Draw">
+            <button onclick="window.call()">Draw</button>
             <script>
-            function download() {
-                var filename = document.getElementById("Filename").value;
-                downloadString( draw.svg(), "text/csv", filename);
-	        }
+                function call() {
+                    clear(draw);
+                    boxtype = document.getElementById("BoxType").value;
+                    server_u = document.getElementById("ServerHeight").value;
+                    drive_row = document.getElementById("DriveRow").value;
+                    drive_col = document.getElementById("DriveCol").value;
+                    drive_slot = document.getElementById("TotalDrive").value;
+                    drive_type = document.getElementById("DriveType").value;
+                    direction = document.getElementById("DriveOrientation").value;
+                    drawDriveLayout(draw, boxtype, server_u, drive_row, drive_col, drive_slot, drive_type, direction, 50, 50);
+                }
             </script>
+            <div id="Download" class="Download">
+                <input width=100% type="text" min="1" max="60" value="sample.svg" class="Filename" id="Filename">
+                <button onclick="window.download()">Download</button>
+                <script>
+                    function download() {
+                        var filename = document.getElementById("Filename").value;
+                        downloadString( draw.svg(), "text/csv", filename);
+                    }
+                </script>
+            </div>
         </div>
     </div>
     <div id='box' class='box'></div>
