@@ -15,9 +15,9 @@
         <meta name="author" content="AvengerMoJo">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
-      <script type="module" crossorigin src="https://avengermojo.github.io/assets/storage.35733801.js"></script>
-    <link rel="modulepreload" href="https://avengermojo.github.io/assets/vendor.208b24cc.js">
-    <link rel="stylesheet" href="https://avengermojo.github.io/assets/storage.567481e7.css">
+      <script type="module" crossorigin src="https://avengermojo.github.io/assets/storage.cc330f33.js"></script>
+    <link rel="modulepreload" href="https://avengermojo.github.io/assets/vendor.ec54b159.js">
+    <link rel="stylesheet" href="https://avengermojo.github.io/assets/storage.994fbe13.css">
   </head>
     <body>
     <h1>Storage Drive Layout Configurator</h1>
@@ -201,6 +201,17 @@
             </div>
         </div>
     </div>
+        <div id="Json" class="Json">
+            <button onclick="window.jsonview()">JSON-View</button>
+            <script>
+                function jsonview() {
+                    showjson( draw.svg() );
+                }
+            </script>
+            <div id="JsonView" class="JsonView">
+                <pre><code id="jsonstring"></code></pre>
+            </div>
+        </div>
     <div id='box' class='box'></div>
     </body>
 </html>
