@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DuckDB UDF Function Test</title>
+</head>
+<body>
+    <h1>Function Examples</h1>
+
+    <h2>Function 1: dot product of two vectors double[] and double[]</h2>
+    <p id="function"><code>
+    import numpy as np
+
+    def dot_product(vector1, vector2):
+      return np.dot(np.array(vector1), np.array(vector2))
+    </code></p>
+
+    <h2>Function 2: dot product of one vectors double[] and one vectors varchar</h2>
+    <p id="function2"><code>
+    import numpy as np
+
+    def dot_product2(vector1, vector2):
+      d_vector = [float(x) for x in vector2.split(',')]
+      return np.dot(np.array(vector1), np.array(d_vector))
+    </code></p>
+
+    <h2>Register UDF: register both dot product function</h2>
+    <p id="function3"><code>
+    import duckdb
+    from duckdb.typing import VARCHAR, DOUBLE
+
+    duckdb.con.create_function("dot_product", dot_product,
+        [duckdb.array_type(float),
+         duckdb.array_type(float)], 
+        DOUBLE, side_effects=True)
+    duckdb.con.create_function("dot_product2", dot_product2,
+        [duckdb.array_type(float),
+         VARCHAR],
+        DOUBLE, side_effects=True)
+    </code></p>
+
+    <h2>Run UDF: execute the query with both dot product function</h2>
+    <p id="function3"><code>
+    import duckdb
+    from duckdb.typing import VARCHAR, DOUBLE
+
+    vectors1 = ', '.join(str(value) for value in vectors)
+    vector_columns = ', '.join([str(f"\"{i}\"") for i in range(0, 384)])
+
+    start_time = time.time()
+    duckdb.con.execute(f"""SELECT {col1, col2},
+            dot_product( [{vector1}], [{vector_columns}]) AS similarity
+            FROM {tablename} ORDER BY similarity DESC""").fetchdf()
+    end_time = time.time()
+    print(f"Time {end_time - start_time}")
+
+    start_time = time.time()
+    duckdb.con.execute(f"""SELECT {select},
+            dot_product2( [{vector1}], vectors_col_name ) AS similarity
+            FROM {tablename} ORDER BY similarity DESC""").fetchdf()
+    end_time = time.time()
+    print(f"Time {end_time - start_time}")
+    </code></p>
+</body>
+</html>
