@@ -2,29 +2,32 @@
 <html>
 <head>
     <title>DuckDB UDF Function Test</title>
+    <style>
+    pre { white-space: pre-wrap; font-family: Consolas, monospace; font-size: 14px; background-color: #f5f5f5; padding: 10px; border-radius: 5px; }
+    </style>
 </head>
 <body>
     <h1>Function Examples</h1>
 
     <h2>Function 1: dot product of two vectors double[] and double[]</h2>
-    <p id="function"><code>
+    <pre id="function"><code>
     import numpy as np
 
     def dot_product(vector1, vector2):
       return np.dot(np.array(vector1), np.array(vector2))
-    </code></p>
+    </code></pre>
 
     <h2>Function 2: dot product of one vectors double[] and one vectors varchar</h2>
-    <p id="function2"><code>
+    <pre id="function2"><code>
     import numpy as np
 
     def dot_product2(vector1, vector2):
       d_vector = [float(x) for x in vector2.split(',')]
       return np.dot(np.array(vector1), np.array(d_vector))
-    </code></p>
+    </code></pre>
 
     <h2>Register UDF: register both dot product function</h2>
-    <p id="function3"><code>
+    <pre id="function3"><code>
     import duckdb
     from duckdb.typing import VARCHAR, DOUBLE
 
@@ -36,10 +39,10 @@
         [duckdb.array_type(float),
          VARCHAR],
         DOUBLE, side_effects=True)
-    </code></p>
+    </code></pre>
 
     <h2>Run UDF: execute the query with both dot product function</h2>
-    <p id="function3"><code>
+    <pre id="function3"><code>
     import duckdb
     from duckdb.typing import VARCHAR, DOUBLE
 
@@ -59,6 +62,6 @@
             FROM {tablename} ORDER BY similarity DESC""").fetchdf()
     end_time = time.time()
     print(f"Time {end_time - start_time}")
-    </code></p>
+    </code></pre>
 </body>
 </html>
