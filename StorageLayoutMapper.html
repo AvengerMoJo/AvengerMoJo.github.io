@@ -90,7 +90,7 @@ function updateURL() {
 window.onload=updateURL;
         </script>
       <script type="module" crossorigin src="https://avengermojo.github.io/assets/storage.880f597d.js"></script>
-      <link rel="stylesheet" href="https://avengermojo.github.io/assets/storage.4fe7897d.css">
+      <link rel="stylesheet" href="https://avengermojo.github.io/assets/storage.b979cde4.css">
     </head>
     <body>
     <h1>Storage Drive Layout Configurator</h1>
@@ -422,6 +422,7 @@ window.onload=updateURL;
                           if (text) text.style.fill = textColor;
                       }
                     }
+                    saveToLocalStorage();
                 }
 
                 function updateSerialNumber() {
@@ -433,6 +434,7 @@ window.onload=updateURL;
                     } else {
                         updateSingleSerial(driveId, serialNumber);
                     }
+                    saveToLocalStorage();
                 }
 
                 function onDriveSelectionChange() {
@@ -524,12 +526,172 @@ window.onload=updateURL;
                 <p style="margin-top: 20px; font-size: 12px; color: #888;">
                     <strong>Tip:</strong> Select a drive ID above to see its current serial number. Each drive can have its own serial number like colors.
                 </p>
+                <hr style="border-color: #555; margin: 20px 0;">
+                <p style="margin-bottom: 10px;">
+                    <small>💾 Auto-saved to browser (survives reload)</small>
+                </p>
+                <button onclick="window.exportConfiguration()">📥 Export Configuration (JSON + SVG)</button>
+                <button onclick="document.getElementById('importFile').click()">📤 Import Configuration</button>
+                <input type="file" id="importFile" accept=".json" style="display: none;" onchange="window.importConfiguration(event)">
             </div>
         </div>
     </div>
     <div id="box" class="box"></div>
     <div id="serialTooltip"></div>
     <script>
+        // LocalStorage and Export/Import functions
+        function saveToLocalStorage() {
+            const metadata = {
+                version: "1.0",
+                savedAt: new Date().toISOString(),
+                driveColors: {},
+                serialNumbers: {}
+            };
+
+            // Collect current state from DOM
+            document.querySelectorAll('.HardDrive').forEach(drive => {
+                const id = drive.id;
+                const rect = drive.querySelector('rect');
+                const title = drive.querySelector('title');
+
+                if (rect) {
+                    metadata.driveColors[id] = rect.style.fill;
+                }
+                if (title && title.textContent) {
+                    metadata.serialNumbers[id] = title.textContent;
+                }
+            });
+
+            localStorage.setItem('storageMapperMetadata', JSON.stringify(metadata));
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('storageMapperMetadata');
+            if (saved) {
+                try {
+                    const metadata = JSON.parse(saved);
+
+                    // Restore drive colors
+                    Object.entries(metadata.driveColors || {}).forEach(([id, color]) => {
+                        const drive = document.getElementById(id);
+                        if (drive) {
+                            const rect = drive.querySelector('rect');
+                            const text = drive.querySelector('text');
+                            if (rect) rect.style.fill = color;
+                            if (text) text.style.fill = getOppositeColor(color);
+                        }
+                    });
+
+                    // Restore serial numbers
+                    Object.entries(metadata.serialNumbers || {}).forEach(([id, serial]) => {
+                        const element = document.getElementById(id);
+                        if (element) {
+                            let title = element.querySelector('title');
+                            if (!title) {
+                                title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+                                element.appendChild(title);
+                            }
+                            title.textContent = serial;
+                        }
+                    });
+
+                    console.log('Loaded metadata from localStorage:', metadata.savedAt);
+                } catch (error) {
+                    console.error('Error loading metadata from localStorage:', error);
+                }
+            }
+        }
+
+        function exportConfiguration() {
+            const metadata = {
+                version: "1.0",
+                exportedAt: new Date().toISOString(),
+                svg: draw.svg(),
+                driveColors: {},
+                serialNumbers: {}
+            };
+
+            // Collect current state from DOM
+            document.querySelectorAll('.HardDrive').forEach(drive => {
+                const id = drive.id;
+                const rect = drive.querySelector('rect');
+                const title = drive.querySelector('title');
+
+                if (rect) {
+                    metadata.driveColors[id] = rect.style.fill;
+                }
+                if (title && title.textContent) {
+                    metadata.serialNumbers[id] = title.textContent;
+                }
+            });
+
+            // Download as JSON file
+            const blob = new Blob([JSON.stringify(metadata, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "storage-config-" + new Date().toISOString().split('T')[0] + ".json";
+            a.style.display = "none";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(function() { URL.revokeObjectURL(url); }, 1500);
+        }
+
+        function importConfiguration(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const metadata = JSON.parse(event.target.result);
+
+                    // Apply colors
+                    Object.entries(metadata.driveColors || {}).forEach(([id, color]) => {
+                        const drive = document.getElementById(id);
+                        if (drive) {
+                            const rect = drive.querySelector('rect');
+                            const text = drive.querySelector('text');
+                            if (rect) rect.style.fill = color;
+                            if (text) text.style.fill = getOppositeColor(color);
+                        }
+                    });
+
+                    // Apply serial numbers
+                    Object.entries(metadata.serialNumbers || {}).forEach(([id, serial]) => {
+                        const element = document.getElementById(id);
+                        if (element) {
+                            let title = element.querySelector('title');
+                            if (!title) {
+                                title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+                                element.appendChild(title);
+                            }
+                            title.textContent = serial;
+                        }
+                    });
+
+                    // Save to localStorage
+                    saveToLocalStorage();
+
+                    alert('Configuration imported successfully! Metadata has been saved to browser storage.');
+                    console.log('Imported metadata:', metadata.exportedAt);
+                } catch (error) {
+                    console.error('Error importing configuration:', error);
+                    alert('Error importing configuration. Please check the file format.');
+                }
+            };
+            reader.readAsText(file);
+
+            // Reset file input
+            event.target.value = '';
+        }
+
+        // Load metadata when DOM is ready and drives exist
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(loadFromLocalStorage, 100);
+        });
+
         // Custom tooltip for serial numbers
         const tooltip = document.getElementById('serialTooltip');
         
