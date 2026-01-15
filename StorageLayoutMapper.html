@@ -83,13 +83,22 @@ function updateURL() {
             server_obj = drawDriveLayout(draw, server_name, boxtype, drive_slot, drive_row, drive_col, drives_type, orientation, undefined, customx, customy, 5, 5);
         }
         else if ( boxtype == "Rackmount" || boxtype == "Tower" ) {
+            server_obj = drawDriveLayout(draw, server_name, boxtype, drive_slot, drive_row, drive_col, drives_type, orientation, server_u, undefined, undefined,5, 5);
+        }
+    }
+    
+    if (window.loadFromLocalStorage) {
+        setTimeout(window.loadFromLocalStorage, 500);
+    }
+}
+        else if ( boxtype == "Rackmount" || boxtype == "Tower" ) {
             server_obj = drawDriveLayout(draw, server_name, boxtype, drive_slot, drive_row, drive_col, drives_type, orientation, server_u, undefined, undefined, 5, 5);
         }
     }
 }
 window.onload=updateURL;
         </script>
-      <script type="module" crossorigin src="https://avengermojo.github.io/assets/storage.880f597d.js"></script>
+      <script type="module" crossorigin src="https://avengermojo.github.io/assets/storage.ab41ea20.js"></script>
       <link rel="stylesheet" href="https://avengermojo.github.io/assets/storage.b979cde4.css">
     </head>
     <body>
@@ -565,43 +574,6 @@ window.onload=updateURL;
             localStorage.setItem('storageMapperMetadata', JSON.stringify(metadata));
         }
 
-        function loadFromLocalStorage() {
-            const saved = localStorage.getItem('storageMapperMetadata');
-            if (saved) {
-                try {
-                    const metadata = JSON.parse(saved);
-
-                    // Restore drive colors
-                    Object.entries(metadata.driveColors || {}).forEach(([id, color]) => {
-                        const drive = document.getElementById(id);
-                        if (drive) {
-                            const rect = drive.querySelector('rect');
-                            const text = drive.querySelector('text');
-                            if (rect) rect.style.fill = color;
-                            if (text) text.style.fill = getOppositeColor(color);
-                        }
-                    });
-
-                    // Restore serial numbers
-                    Object.entries(metadata.serialNumbers || {}).forEach(([id, serial]) => {
-                        const element = document.getElementById(id);
-                        if (element) {
-                            let title = element.querySelector('title');
-                            if (!title) {
-                                title = document.createElementNS("http://www.w3.org/2000/svg", "title");
-                                element.appendChild(title);
-                            }
-                            title.textContent = serial;
-                        }
-                    });
-
-                    console.log('Loaded metadata from localStorage:', metadata.savedAt);
-                } catch (error) {
-                    console.error('Error loading metadata from localStorage:', error);
-                }
-            }
-        }
-
         function exportConfiguration() {
             const metadata = {
                 version: "1.0",
@@ -686,12 +658,7 @@ window.onload=updateURL;
             // Reset file input
             event.target.value = '';
         }
-
-        // Load metadata when DOM is ready and drives exist
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(loadFromLocalStorage, 100);
-        });
-
+ 
         // Custom tooltip for serial numbers
         const tooltip = document.getElementById('serialTooltip');
         
