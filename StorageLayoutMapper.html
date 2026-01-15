@@ -89,8 +89,8 @@ function updateURL() {
 }
 window.onload=updateURL;
         </script>
-      <script type="module" crossorigin src="https://avengermojo.github.io/assets/storage.842f7546.js"></script>
-      <link rel="stylesheet" href="https://avengermojo.github.io/assets/storage.bb544210.css">
+      <script type="module" crossorigin src="https://avengermojo.github.io/assets/storage.1aaef520.js"></script>
+      <link rel="stylesheet" href="https://avengermojo.github.io/assets/storage.4fe7897d.css">
     </head>
     <body>
     <h1>Storage Drive Layout Configurator</h1>
@@ -528,6 +528,38 @@ window.onload=updateURL;
         </div>
     </div>
     <div id="box" class="box"></div>
+    <div id="serialTooltip"></div>
+    <script>
+        // Custom tooltip for serial numbers
+        const tooltip = document.getElementById('serialTooltip');
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('mouseover', function(e) {
+                const target = e.target.closest('.HardDrive');
+                if (target) {
+                    const title = target.querySelector('title');
+                    if (title && title.textContent) {
+                        tooltip.textContent = title.textContent;
+                        tooltip.style.display = 'block';
+                    }
+                }
+            }, true);
+            
+            document.addEventListener('mouseout', function(e) {
+                const target = e.target.closest('.HardDrive');
+                if (target) {
+                    tooltip.style.display = 'none';
+                }
+            }, true);
+            
+            document.addEventListener('mousemove', function(e) {
+                if (tooltip.style.display === 'block') {
+                    tooltip.style.left = (e.pageX + 15) + 'px';
+                    tooltip.style.top = (e.pageY + 15) + 'px';
+                }
+            }, true);
+        });
+    </script>
     </body>
 </html>
 
