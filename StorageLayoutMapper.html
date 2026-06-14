@@ -618,7 +618,7 @@ window.onload=updateURL;
                     // Restore URL parameters and redraw layout if URL is present
                     if (metadata.url) {
                         const importedUrl = new URL(metadata.url);
-                        window.history.pushState({}, "", importedUrl);
+                        window.history.pushState({}, "", importedUrl.pathname + importedUrl.search);
                         updateURL();
                     }
 
