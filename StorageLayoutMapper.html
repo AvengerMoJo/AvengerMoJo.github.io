@@ -91,11 +91,6 @@ function updateURL() {
         setTimeout(window.loadFromLocalStorage, 500);
     }
 }
-        else if ( boxtype == "Rackmount" || boxtype == "Tower" ) {
-            server_obj = drawDriveLayout(draw, server_name, boxtype, drive_slot, drive_row, drive_col, drives_type, orientation, server_u, undefined, undefined, 5, 5);
-        }
-    }
-}
 window.onload=updateURL;
         </script>
       <script type="module" crossorigin src="https://avengermojo.github.io/assets/storage.ab41ea20.js"></script>
@@ -578,6 +573,7 @@ window.onload=updateURL;
             const metadata = {
                 version: "1.0",
                 exportedAt: new Date().toISOString(),
+                url: window.location.href,
                 svg: draw.svg(),
                 driveColors: {},
                 serialNumbers: {}
@@ -619,6 +615,13 @@ window.onload=updateURL;
                 try {
                     const metadata = JSON.parse(event.target.result);
 
+                    // Restore URL parameters and redraw layout if URL is present
+                    if (metadata.url) {
+                        const importedUrl = new URL(metadata.url);
+                        window.history.pushState({}, "", importedUrl);
+                        updateURL();
+                    }
+
                     // Apply colors
                     Object.entries(metadata.driveColors || {}).forEach(([id, color]) => {
                         const drive = document.getElementById(id);
@@ -646,7 +649,7 @@ window.onload=updateURL;
                     // Save to localStorage
                     saveToLocalStorage();
 
-                    alert('Configuration imported successfully! Metadata has been saved to browser storage.');
+                    alert('Configuration imported successfully! Layout restored and metadata saved to browser storage.');
                     console.log('Imported metadata:', metadata.exportedAt);
                 } catch (error) {
                     console.error('Error importing configuration:', error);
